@@ -8,7 +8,7 @@
           class="form-control"
           id="title"
           required
-          v-model="tutorial.title"
+          v-model="user.title"
           name="title"
         />
       </div>
@@ -19,7 +19,7 @@
           class="form-control"
           id="description"
           required
-          v-model="tutorial.description"
+          v-model="user.description"
           name="description"
         />
       </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import TutorialDataService from "../services/TutorialDataService";
+import UserDataService from "../services/UserDataService";
 
 export default {
   name: "add-tutorial",
@@ -57,7 +57,7 @@ export default {
         description: this.tutorial.description
       };
 
-      TutorialDataService.create(data)
+      UserDataService.create(data)
         .then(response => {
           this.tutorial.id = response.data.id;
           console.log(response.data);
