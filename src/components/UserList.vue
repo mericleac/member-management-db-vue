@@ -2,28 +2,18 @@
   <div class="list row">
     <div class="col-md-6">
       <h4>Users List</h4>
-      <ul class="list-group">
-        <li v-for="user in users" v-bind:key="user.id">
-          {{ user.name }} {{ user.email }}
-        </li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <div v-if="currentUser">
-        <h4>User</h4>
-        <div>
-          <label><strong>Name:</strong></label> {{ currentUser.name }}
-        </div>
-        <div>
-          <label><strong>Email:</strong></label> {{ currentUser.email }}
-        </div>
-
-        <router-link :to="'/tutorials/' + currentUser.id" class="badge badge-warning">Edit</router-link>
-      </div>
-      <div v-else>
-        <br />
-        <p>Please click on a Tutorial...</p>
-      </div>
+        <v-data-table
+          :headers="headers"
+          :items="users"
+          disable-pagination
+          :hide-default-footer="true"
+          :multi-sort="true"
+        >
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon small class="mr-2" @click="editUser(item.id)">mdi-pencil</v-icon>
+            <v-icon small @click="deleteUser(item.id)">mdi-delete</v-icon>
+          </template>
+        </v-data-table>
     </div>
   </div>
 </template>
@@ -32,13 +22,15 @@
 import UserDataService from "../services/UserDataService";
 
 export default {
-  name: "tutorials-list",
+  name: "users-list",
   data() {
     return {
-      tutorials: [],
-      currentTutorial: null,
-      currentIndex: -1,
-      title: ""
+      users: [],
+      headers: [
+        { text: "Name", align: "start", sortable: true, value: "name" },
+        { text: "Email", value: "email", sortable: true },
+        { text: "Actions", value: "actions", sortable: false },
+      ]
     };
   },
   methods: {
@@ -54,37 +46,22 @@ export default {
     },
 
     refreshList() {
-      this.retrieveTutorials();
-      this.currentTutorial = null;
-      this.currentIndex = -1;
+      this.retrieveUsers()
     },
 
-    setActiveTutorial(tutorial, index) {
-      this.currentTutorial = tutorial;
-      this.currentIndex = index;
+    editUser(id) {
+      this.$router.push({ name: "user-details", params: { id: id } });
     },
 
-    removeAllTutorials() {
-      UserDataService.deleteAll()
-        .then(response => {
-          console.log(response.data);
+    deleteUser(id) {
+      UserDataService.delete(id)
+        .then(() => {
           this.refreshList();
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
-    
-    searchTitle() {
-      UserDataService.findByTitle(this.title)
-        .then(response => {
-          this.tutorials = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
   },
   mounted() {
     this.retrieveUsers();
