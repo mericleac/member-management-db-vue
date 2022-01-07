@@ -1,7 +1,7 @@
 <template>
 	<div class="col-md-12">
 		<h4>Member List</h4>
-		<button class="btn btn-primary" v-on:click="showFilter = !showFilter">
+		<button class="btn btn-primary blue" v-on:click="showFilter = !showFilter">
 			Show Filter
 		</button>
 		<button
@@ -18,21 +18,31 @@
 		<div v-if="showFilter">
 			<div class="form-group">
 				<label for="membership_type">Membership Type</label>
-				<input
-					type="text"
+				<select
 					class="form-control"
-					id="membership_type"
+					id="type"
 					required
 					v-model="filterMembershipType"
-					name="membership_type"
-				/>
+					name="type"
+				>
+					<option>Donation - unrestricted</option>
+					<option>Donation - designated</option>
+					<option>Individual</option>
+					<option>Family</option>
+					<option>Steward</option>
+					<option>Protector</option>
+					<option>Benefactor</option>
+					<option>River Legacy Circle</option>
+					<option>Municipal</option>
+					<option>Business</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="membership_end_date_start"
 					>Membership End Date - Start</label
 				>
 				<input
-					type="text"
+					type="date"
 					class="form-control"
 					id="membership_end_date_start"
 					required
@@ -43,7 +53,7 @@
 			<div class="form-group">
 				<label for="membership_end_date_end">Membership End Date - End</label>
 				<input
-					type="text"
+					type="date"
 					class="form-control"
 					id="membership_end_date_end"
 					required
@@ -54,7 +64,7 @@
 			<div class="form-group">
 				<label for="qb_date_start">QB Date - Start</label>
 				<input
-					type="text"
+					type="date"
 					class="form-control"
 					id="qb_date_start"
 					required
@@ -65,7 +75,7 @@
 			<div class="form-group">
 				<label for="qb_date_end">QB Date - End</label>
 				<input
-					type="text"
+					type="date"
 					class="form-control"
 					id="qb_date_end"
 					required
