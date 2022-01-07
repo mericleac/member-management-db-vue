@@ -125,6 +125,17 @@
     </div>
 
     <div class="form-group">
+      <label for="amount">Amount</label>
+      <input
+        class="form-control"
+        id="amount"
+        required
+        v-model="member.amount"
+        name="amount"
+      />
+    </div>
+
+    <div class="form-group">
       <label for="type">Renewal</label>
       <select
         class="form-control"
@@ -183,6 +194,18 @@
         v-model="member.receipt_num"
         name="receipt_num"
       />
+    </div>
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        id="newsletter"
+        required
+        v-model="member.newsletter"
+        name="newsletter"
+        type="checkbox"
+      />
+      <label for="newsletter">Newsletter</label>
     </div>
 
     <div class="form-group">

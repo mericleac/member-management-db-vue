@@ -11,6 +11,10 @@
 		>
 			Export Selected
 		</button>
+        <div>
+            <input type="file" v-on:change="uploadFile" ref="file">
+            <button v-on:click="submitFile" class="btn btn-primary">Upload</button>
+        </div>
 		<div v-if="showFilter">
 			<div class="form-group">
 				<label for="membership_type">Membership Type</label>
@@ -85,6 +89,9 @@
 			:multi-sort="true"
 			show-select
 		>
+			<template v-slot:[`item.newsletter`]="{ item }">
+				{{ item.newsletter ? 'True' : 'False' }}
+			</template>
 			<template v-slot:[`item.actions`]="{ item }">
 				<v-icon small class="mr-2" @click="editMember(item.id)"
 					>mdi-pencil</v-icon
@@ -108,6 +115,7 @@ export default {
 			filterMembershipEndDateEnd: null,
 			filterQBDateStart: null,
 			filterQBDateEnd: null,
+            importFile: null,
 			members: [],
 			selectedMembers: [],
 			filteredMembers: [],
@@ -127,6 +135,7 @@ export default {
 				{ text: "County", sortable: true, value: "county" },
 				{ text: "Phone #", sortable: true, value: "phone_number" },
 				{ text: "Membership Type", sortable: true, value: "type" },
+				{ text: "Amount", sortable: true, value: "amount" },
 				{ text: "Renewal", sortable: true, value: "renewal" },
 				{
 					text: "Membership End Date",
@@ -136,6 +145,7 @@ export default {
 				{ text: "QB Date", sortable: true, value: "qb_date" },
 				{ text: "Invoice #", sortable: true, value: "invoice_num" },
 				{ text: "Receipt #", sortable: true, value: "receipt_num" },
+				{ text: "Newsletter", sortable: true, value: "newsletter" },
 				{ text: "Notes", sortable: false, value: "notes" },
 				{ text: "Actions", value: "actions", sortable: false },
 			],
@@ -229,8 +239,30 @@ export default {
 		},
 
 		exportMembers() {
-			console.log(this.selectedMembers);
+            const memberIds = this.selectedMembers.map(member => member.id);
+            const idString = memberIds.map(id => `ids=${id}`).join('&');
+            window.open(`http://localhost:8000/api/members/export?${idString}`);
 		},
+
+        uploadFile() {
+            this.importFile = this.$refs.file.files[0];
+        },
+
+        submitFile() {
+            const formData = new FormData();
+            formData.append('file', this.importFile);
+            MemberDataService.import(formData)
+				.then((response) => {
+					console.log(response);
+					this.members = response.data;
+					console.log(response.data);
+                    this.importFile = null;
+					this.filterMembers();
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+        }
 	},
 	mounted() {
 		this.retrieveMembers();

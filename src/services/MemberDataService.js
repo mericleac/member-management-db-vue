@@ -20,6 +20,11 @@ class MemberDataService {
   delete(id) {
     return http.delete(`/members/${id}`);
   }
+
+  import(formData) {
+    const headers = { 'Content-Type': 'multipart/form-data' };
+    return http.post('/members/import', formData, { headers });
+  }
 }
 
 export default new MemberDataService();
