@@ -1,7 +1,7 @@
 <template>
   <div class="submit-form">
     <div v-if="!submitted">
-      <MemberForm :member=member />
+      <MemberForm :member="member" />
 
       <button @click="saveMember" class="btn btn-success">Submit</button>
     </div>
@@ -15,7 +15,7 @@
 
 <script>
 import MemberDataService from "../services/MemberDataService";
-import MemberForm from '@/components/MemberForm.vue';
+import MemberForm from "@/components/MemberForm.vue";
 
 export default {
   components: { MemberForm },
@@ -23,29 +23,29 @@ export default {
   data() {
     return {
       member: {
-        id: null
+        id: null,
       },
-      submitted: false
+      submitted: false,
     };
   },
   methods: {
     saveMember() {
       MemberDataService.create(this.member)
-        .then(response => {
+        .then((response) => {
           this.member.id = response.data.id;
           console.log(response.data);
           this.submitted = true;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
-    
+
     newMember() {
       this.submitted = false;
       this.member = {};
-    }
-  }
+    },
+  },
 };
 </script>
 

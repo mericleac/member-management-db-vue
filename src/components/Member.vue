@@ -2,20 +2,12 @@
   <div v-if="member" class="edit-form">
     <h4>Member</h4>
     <form>
-      <member-form :member=member />
+      <member-form :member="member" />
     </form>
 
-    <button class="btn btn-success"
-      @click="updateMember"
-    >
-      Update
-    </button>
+    <button class="btn btn-success" @click="updateMember">Update</button>
 
-    <button class="btn btn-danger"
-      @click="deleteMember"
-    >
-      Delete
-    </button>
+    <button class="btn btn-danger" @click="deleteMember">Delete</button>
 
     <p>{{ message }}</p>
   </div>
@@ -23,7 +15,7 @@
 
 <script>
 import MemberDataService from "../services/MemberDataService";
-import MemberForm from './MemberForm.vue';
+import MemberForm from "./MemberForm.vue";
 
 export default {
   components: { MemberForm },
@@ -31,47 +23,47 @@ export default {
   data() {
     return {
       member: null,
-      message: ''
+      message: "",
     };
   },
   methods: {
     getMember(id) {
       MemberDataService.get(id)
-        .then(response => {
+        .then((response) => {
           this.member = response.data;
           console.log(response.data);
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
 
     updateMember() {
       MemberDataService.update(this.member.id, this.member)
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
-          this.message = 'The member was updated successfully!';
+          this.message = "The member was updated successfully!";
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
 
     deleteMember() {
       MemberDataService.delete(this.member.id)
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           this.$router.push({ name: "members" });
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
-    }
+    },
   },
   mounted() {
-    this.message = '';
+    this.message = "";
     this.getMember(this.$route.params.id);
-  }
+  },
 };
 </script>
 
